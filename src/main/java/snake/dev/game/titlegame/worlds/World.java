@@ -7,6 +7,7 @@ import snake.dev.game.model.Sprite;
 import snake.dev.game.titlegame.Game;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class World {
     private int width,height;
@@ -41,8 +42,8 @@ public class World {
 
     public void render(Graphics g){
 
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++) {
+        for(int y = 0; y < 20; y++){
+            for(int x = 0; x < 20; x++) {
                 if (titles[x][y] == SpriteType.BRICK_WALL) {
                     g.drawImage(Assets.brickwall.getSpriteImage(), (int) (x * 32 - game.getCameraGame().getxOffset()), (int) (y * 32 - game.getCameraGame().getyOffset()), 3, 3, null);
                 } else {
@@ -82,6 +83,9 @@ public class World {
 
     }
 
+    public void setTitles(SpriteType[][]titles ) {
+        this.titles = titles;
+    }
 
     private void loadWord(String path){
         titles = new SpriteType[width][height];
@@ -99,4 +103,5 @@ public class World {
         titles[9][10] = SpriteType.FOOD_RED;
 
     }
+
 }

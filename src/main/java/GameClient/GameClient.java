@@ -1,12 +1,19 @@
 package GameClient;
 
-import java.io.DataInput;
+import ConvertDataTransfer.Convert;
+import com.google.gson.Gson;
+import snake.dev.define.SpriteType;
+import snake.dev.game.entities.creatures.SnakeDot;
+import snake.dev.game.titlegame.Game;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Map;
 
 public class GameClient {
     private int port;
@@ -14,9 +21,11 @@ public class GameClient {
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
     private Socket socket;
-
-    public GameClient(String strIpAdress, int port){
+    private Game game;
+    boolean isLogged = false;
+    public GameClient(Game game, String strIpAdress, int port){
         try {
+            this.game = game;
             this.port = port;
             ipAddress = InetAddress.getByName(strIpAdress);
             socket = new Socket(ipAddress,port);
@@ -30,13 +39,18 @@ public class GameClient {
     }
 
     public void tranferData(){
-        Thread sendData = new Thread(new Runnable() {
+        final Gson gson = new Gson();
+        final Thread sendData = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    dataOutputStream.writeUTF("bo may da vao roi ne");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                while (true) {
+                    try {
+                        Snake snake = Convert.convertSnakeClientToServer(game.getPlayer().getSnake());
+                        String snakeJsonData = gson.toJson(snake);
+                        dataOutputStream.writeUTF(snakeJsonData);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -44,19 +58,35 @@ public class GameClient {
         Thread readData = new Thread(new Runnable() {
             @Override
             public void run() {
-                String jsonData = null;
-                try {
-                    jsonData = dataInputStream.readUTF();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                while (true) {
+                    String jsonData = null;
+                    try {
+                        jsonData = dataInputStream.readUTF();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Map<String,Object> myMap = Convert.convertDataFormServer(jsonData);
+                    String temp = gson.toJson(myMap.get("world"));
+                    SpriteType[][] titles = Convert.convertWorldJsonStringToWorld(temp);
+                    System.out.println(titles);
+                    game.getWorld().setTitles(titles);
+
+                    if(!isLogged) {
+                        isLogged = !isLogged;
+                        String snakeJsonValue = gson.toJson(myMap.get("snake"));
+                        List<SnakeDot> snake = Convert.convertSnakeFromServerToClient(snakeJsonValue);
+                        game.getPlayer().setSnake(snake);
+                    }
+
                 }
-                System.out.println("SERVER > " + jsonData);
             }
         });
 
         sendData.start();
         readData.start();
     }
+
 
 
 }

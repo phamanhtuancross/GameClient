@@ -43,4 +43,52 @@ public class Assets {
         brickwall      = new Sprite(SpriteType.BRICK_WALL,SpritePath.BRICK_WALL);
     }
 
+    public static Sprite getSpriteBySpriteType(SpriteType spriteType){
+        switch (spriteType){
+            case BRICK_WALL:{
+                return brickwall;
+            }
+            case FOOD_BLACK:{
+                return foodBlack;
+            }
+            case FOOD_BLUE:{
+                return foodBlue;
+            }
+            case FOOD_GREEN:{
+                return foodGreen;
+            }
+            case FOOD_PINK:{
+                return  foodPink;
+            }
+            case FOOD_RED:{
+                return foodRed;
+            }
+            case FOOD_YELLOW:{
+                return foodYellow;
+            }
+            case SNAKE_DOT_BLACK:{
+                return snakeDotBlack;
+            }
+            case SNAKE_DOT_BLUE:{
+                return snakeDotBlue;
+            }
+            case SNAKE_DOT_GREEN:{
+                return snakeDotGreen;
+            }
+            case SNAKE_DOT_PINK:{
+                return snakeDotPink;
+            }
+            case SNAKE_DOT_RED:{
+                return snakeDotRed;
+            }
+            case SNAKE_DOT_YELLOW:{
+                return snakeDotYellow;
+            }
+            case SNAKE_HEAD:{
+                return snakeHead;
+            }
+        }
+        return null;
+    }
+
 }

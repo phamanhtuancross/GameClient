@@ -1,14 +1,15 @@
 package snake.dev.game.titlegame;
+import GameClient.GameClient;
 import snake.dev.game.display.Display;
+import snake.dev.game.entities.creatures.Player;
 import snake.dev.game.gfx.Assets;
 import snake.dev.game.gfx.CameraGame;
 import snake.dev.game.states.GameState;
-import snake.dev.game.states.MenuState;
 import snake.dev.game.states.State;
+import snake.dev.game.titlegame.worlds.World;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.io.IOException;
 
 public class Game implements Runnable {
 
@@ -19,10 +20,12 @@ public class Game implements Runnable {
     private int width, height;
     private Thread thread;
     private boolean isRunning = false;
-    private State gameState;
+    private GameState gameState;
     private State menuState;
     private KeyManager keyManager;
     private CameraGame cameraGame;
+    private World world;
+    private Player player;
 
     public KeyManager getKeyManager() {
         return keyManager;
@@ -36,7 +39,7 @@ public class Game implements Runnable {
         isRunning = running;
     }
 
-    public State getGameState() {
+    public GameState getGameState() {
         return gameState;
     }
 
@@ -52,11 +55,26 @@ public class Game implements Runnable {
         return height;
     }
 
+    public World getWorld() {
+        return world;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     public Game(String title, int width, int height) {
         this.title = title;
         this.width = width;
         this.height = height;
         keyManager = new KeyManager();
+        Assets.init();
+        display = new Display(title, width, height);
+        display.getFrame().addKeyListener(keyManager);
+
+        cameraGame = new CameraGame(this, 0, 0);
+        world = new World(this,"");
+        player = new Player(world,this,100,50);
         // gameClient = new GameClient("localhost",1234);
 
     }
@@ -64,7 +82,6 @@ public class Game implements Runnable {
     @Override
     public void run() {
         init();
-
 
         int FPS = 60;
         double timePerTick = 1000000000 / FPS;
@@ -101,14 +118,16 @@ public class Game implements Runnable {
     public synchronized void start(){
 
 
-//        if (isRunning) {
-//            return;
-//        }
-//
-//        isRunning = true;
-//        thread = new Thread(this);
-//        thread.start();
+        if (isRunning) {
+            return;
+        }
+
+        isRunning = true;
+        thread = new Thread(this);
+        thread.start();
         // gameClient.start();
+        GameClient gameClient = new GameClient(this,"localhost",3000);
+        gameClient.tranferData();
     }
 
     public synchronized void stop() {
@@ -126,22 +145,21 @@ public class Game implements Runnable {
     }
 
     private void init() {
-        Assets.init();
-        display = new Display(title, width, height);
-        display.getFrame().addKeyListener(keyManager);
 
-        cameraGame = new CameraGame(this, 0, 0);
-        gameState = new GameState(this);
-        menuState = new MenuState(this);
 
-        State.setState(gameState);
+        // gameState = new GameState(this);
+        //menuState = new MenuState(this);
+
+        //State.setState(gameState);
     }
 
 
     private void tick() {
-        if (State.getState() != null) {
-            State.getState().tick();
-        }
+//        if (State.getState() != null) {
+//            State.getState().tick();
+//        }
+        world.tick();
+        player.tick();
     }
 
     private void render() {
@@ -154,14 +172,12 @@ public class Game implements Runnable {
 
         graphics = bufferStrategy.getDrawGraphics();
         graphics.clearRect(0, 0, width, height);
-        if (State.getState() != null) {
-            State.getState().render(graphics);
-        }
+
+        world.render(graphics);
+        player.render(graphics);
+
         bufferStrategy.show();
         graphics.dispose();
     }
-
-
-
 
 }

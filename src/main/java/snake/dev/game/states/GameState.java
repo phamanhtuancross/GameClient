@@ -12,8 +12,23 @@ public class GameState extends State{
     private World world;
     public GameState(Game game){
         super(game);
-        world = new World(game,"");
-        player = new Player(world,game,100,50);
+
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
     }
 
     @Override

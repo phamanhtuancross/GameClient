@@ -22,7 +22,15 @@ public class Player extends Creature {
     private List<SnakeDot> snake = new ArrayList<SnakeDot>();
     private World world;
 
-    public Player(World world,Game game,float x, float y) {
+    public List<SnakeDot> getSnake() {
+        return snake;
+    }
+
+    public void setSnake(List<SnakeDot> snake) {
+        this.snake = snake;
+    }
+
+    public Player(World world, Game game, float x, float y) {
         super(game,x, y);
         this.game = game;
         initSnake(x,y);
@@ -30,6 +38,7 @@ public class Player extends Creature {
         System.out.println("WORLD DATA FORM SERVER IN PLAYER : " + world );
         System.out.println("SNAKE DATA FORM SERVER IN PLAYER : " + snake.get(1).x);
     }
+
 
     public void initSnake(float x, float y){
         float _x = x;
