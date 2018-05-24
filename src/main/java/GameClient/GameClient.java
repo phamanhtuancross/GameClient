@@ -1,9 +1,11 @@
 package GameClient;
+
 import ConvertDataTransfer.Convert;
 import com.google.gson.Gson;
 import snake.dev.define.SpriteType;
 import snake.dev.game.entities.creatures.SnakeDot;
 import snake.dev.game.titlegame.Game;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -49,10 +51,9 @@ public class GameClient {
             public void run() {
                 while (true) {
                     try {
-
-                            Snake snake = Convert.convertSnakeClientToServer(game.getPlayer().getSnake());
-                            String snakeJsonData = gson.toJson(snake);
-                            dataOutputStream.writeUTF(snakeJsonData);
+                        Snake snake = Convert.convertSnakeClientToServer(game.getPlayer().getSnake());
+                        String snakeJsonData = gson.toJson(snake);
+                        dataOutputStream.writeUTF(snakeJsonData);
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -65,6 +66,7 @@ public class GameClient {
             @Override
             public void run() {
                 while (true) {
+
                     String jsonData = null;
                     try {
                         jsonData = dataInputStream.readUTF();
@@ -73,16 +75,14 @@ public class GameClient {
                     }
 
                     Map<String, Object> myMap = Convert.convertDataFormServer(jsonData);
-
                     String strJsonListSnakes = gson.toJson(myMap.get("listSnakes"));
                     List<Snake> snakes = Convert.getListSnakesFromJsonValue(strJsonListSnakes);
-
                     List<List<SnakeDot>> anotherSnakes = Convert.convertAnotherSnakesJSonToObject(snakes);
+
                     System.out.println("ANOTHER SNAKES : " + myMap.get("listSnakes"));
                     System.out.println("ANOTHER SNAKES LENGTH : " + anotherSnakes.size());
 
                     game.getPlayer().setAnotherSnakes(anotherSnakes);
-
                     String temp = gson.toJson(myMap.get("world"));
                     SpriteType[][] titles = Convert.convertWorldJsonStringToWorld(temp);
                     System.out.println(titles);
