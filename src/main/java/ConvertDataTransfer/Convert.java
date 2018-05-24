@@ -4,7 +4,6 @@ import GameClient.Dot;
 import GameClient.Snake;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import snake.dev.define.SpriteType;
 import snake.dev.game.entities.creatures.SnakeDot;
 import snake.dev.game.gfx.Assets;
@@ -28,8 +27,6 @@ public class Convert {
         Gson gson = new Gson();
         Type type = new TypeToken<Map<String,Object>>(){}.getType();
         Map<String,Object> myMap = gson.fromJson(jsonValue,type);
-        System.out.println("WORLD : "+ myMap.get("world"));
-        System.out.println("SNAKE : " + myMap.get("snake"));
         return  myMap;
     }
 
@@ -48,6 +45,16 @@ public class Convert {
         return snake;
     }
 
+    public static List<SnakeDot> convertSnakeToSnakeDotObjet(Snake snake){
+        List<SnakeDot> snakeDots = new ArrayList<SnakeDot>();
+        for(Dot dot : snake.dots){
+            Sprite sprite = Assets.getSpriteBySpriteType(dot.spriteType);
+            SnakeDot snakeDot = new SnakeDot(dot.x,dot.y,sprite);
+            snakeDots.add(snakeDot);
+        }
+        return snakeDots;
+    }
+
     public static Snake convertSnakeClientToServer(List<SnakeDot> snakeClient){
         Snake snakeServer = new Snake();
         for(SnakeDot snakeDot : snakeClient) {
@@ -57,6 +64,23 @@ public class Convert {
         return snakeServer;
     }
 
+    public static List<List<SnakeDot>> convertAnotherSnakesJSonToObject(List<Snake> snakes){
+        List<List<SnakeDot>> anotherSnakes = new ArrayList<List<SnakeDot>>();
+        if(snakes != null) {
+            for (Snake snake : snakes) {
+                //System.out.println("TEST : " + snake);
+                List<SnakeDot> _snake = convertSnakeToSnakeDotObjet(snake);
+                anotherSnakes.add(_snake);
+            }
+        }
+        return anotherSnakes;
+    }
 
+    public static List<Snake> getListSnakesFromJsonValue(String jsonValue){
 
+        Gson gson = new Gson();
+        Type collectionType = new TypeToken<List<Snake>>(){}.getType();
+        List<Snake> snakes = gson.fromJson(jsonValue,collectionType);
+        return snakes;
+    }
 }
