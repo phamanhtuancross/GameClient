@@ -6,7 +6,7 @@ import snake.dev.define.Define;
 
 public class Launcher {
     public static void main(String[] args) {
-        Game game = new Game("SNAKE SOCKET IO","localhost",1234,5004);
+        Game game = new Game("SNAKE SOCKET IO","localhost",1234,5002);
         game.start();
     }
 }
