@@ -83,4 +83,16 @@ public class Convert {
         List<Snake> snakes = gson.fromJson(jsonValue,collectionType);
         return snakes;
     }
+
+    public static SnakeDot convertDotToSnakeDot(Dot dot){
+        return new SnakeDot(dot.x,dot.y, Assets.getSpriteBySpriteType(dot.spriteType));
+    }
+    public static List<SnakeDot> convertListDotsToListSnakeDots(List<Dot> dots){
+        List<SnakeDot> snakeDots = new ArrayList<SnakeDot>();
+        for(Dot dot : dots){
+            SnakeDot snakeDot = convertDotToSnakeDot(dot);
+            snakeDots.add(snakeDot);
+        }
+        return snakeDots;
+    }
 }

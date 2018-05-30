@@ -82,7 +82,7 @@ public class GameClient {
                     System.out.println("ANOTHER SNAKES : " + myMap.get("listSnakes"));
                     System.out.println("ANOTHER SNAKES LENGTH : " + anotherSnakes.size());
 
-                    game.getPlayer().setAnotherSnakes(anotherSnakes);
+                  //  game.getPlayer().setAnotherSnakes(anotherSnakes);
                     String temp = gson.toJson(myMap.get("world"));
                     SpriteType[][] titles = Convert.convertWorldJsonStringToWorld(temp);
                     System.out.println(titles);

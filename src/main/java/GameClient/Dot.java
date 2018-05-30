@@ -3,7 +3,9 @@ package GameClient;
 
 import snake.dev.define.SpriteType;
 
-public class Dot {
+import java.io.Serializable;
+
+public class Dot implements Serializable {
     public int x;
     public int y;
     public SpriteType spriteType;

@@ -18,19 +18,22 @@ import java.util.List;
 public class Player extends Creature {
 
     private Game game;
+    private long Id;
     private int score = 0;
     private List<SnakeDot> snake = new ArrayList<SnakeDot>();
     private World world;
-    private List<List<SnakeDot>> anotherSnakes = null;
+    private List<SnakeDot> anotherSnakes = null;
 
     public List<SnakeDot> getSnake() {
         return snake;
     }
-
     public void setSnake(List<SnakeDot> snake) {
         this.snake = snake;
     }
 
+    public void setId(long Id){
+        this.Id = Id;
+    }
     public Player(World world, Game game, float x, float y) {
         super(game, x, y);
         this.game = game;
@@ -38,11 +41,12 @@ public class Player extends Creature {
         this.world = world;
     }
 
-    public List<List<SnakeDot>> getAnotherSnakes() {
+
+    public List<SnakeDot> getAnotherSnakes() {
         return anotherSnakes;
     }
 
-    public void setAnotherSnakes(List<List<SnakeDot>> anotherSnakes) {
+    public void setAnotherSnakes(List<SnakeDot> anotherSnakes) {
         this.anotherSnakes = anotherSnakes;
     }
 
@@ -161,39 +165,26 @@ public class Player extends Creature {
         for (int index = 0; index < snake.size(); index++) {
             SnakeDot dot = snake.get(index);
             g.drawImage(dot.sprite.getSpriteImage(), (int) dot.x, (int) dot.y, null);
-            if (g instanceof Graphics2D) {
-                String scoreString = "SCORE :" + score;
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                Font font = new Font("Serif", Font.PLAIN, 30);
-                AttributedString as1 = new AttributedString(scoreString);
-                as1.addAttribute(TextAttribute.FONT, font);
-                as1.addAttribute(TextAttribute.FOREGROUND, Color.red, 0, 6);
-                g2d.drawString(as1.getIterator(), Define.BoardSize.WIDTH_SIZE / 2 - 50, 50);
 
-            }
         }
 
         if (anotherSnakes != null) {
             for (int anotherSnakeIndex = 0; anotherSnakeIndex < this.anotherSnakes.size(); anotherSnakeIndex++) {
-                List<SnakeDot> anotherSnake = anotherSnakes.get(anotherSnakeIndex);
-                for (int index = 0; index < anotherSnake.size(); index++) {
-                    SnakeDot dot = anotherSnake.get(index);
-                    g.drawImage(dot.sprite.getSpriteImage(), (int) dot.x, (int) dot.y, null);
-////                   if(g instanceof Graphics2D)
-////                   {
-////                       String scoreString = "SCORE :" + score;
-////                       Graphics2D g2d = (Graphics2D)g;
-////                       g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-////                       Font font = new Font("Serif", Font.PLAIN, 30);
-////                       AttributedString as1 = new AttributedString(scoreString);
-////                       as1.addAttribute(TextAttribute.FONT, font);
-////                       as1.addAttribute(TextAttribute.FOREGROUND, Color.red, 0, 6);
-////                       g2d.drawString(as1.getIterator(), Define.BoardSize.WIDTH_SIZE/2 -  50, 50);
-////
-////                   }
-                }
+                SnakeDot dot = anotherSnakes.get(anotherSnakeIndex);
+                g.drawImage(dot.sprite.getSpriteImage(), (int) dot.x, (int) dot.y, null);
            }
+        }
+
+        if (g instanceof Graphics2D) {
+            String scoreString = "SCORE :" + score;
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Font font = new Font("Serif", Font.PLAIN, 30);
+            AttributedString as1 = new AttributedString(scoreString);
+            as1.addAttribute(TextAttribute.FONT, font);
+            as1.addAttribute(TextAttribute.FOREGROUND, Color.red, 0, 6);
+            g2d.drawString(as1.getIterator(), Define.BoardSize.WIDTH_SIZE / 2 - 50, 50);
+
         }
     }
 
