@@ -79,8 +79,25 @@ public class UdpConnection implements Runnable {
                 data = dataInputStream.readUTF();
                
                 String[] datas = data.split("#");
-                String gamePlayData = datas[0];
-                String listCharacterObjectInfoData = datas[1];
+                String gamePlayData ;
+                String listCharacterObjectInfoData;
+                String indexWinerString;
+//
+//                if(datas.length > 2){
+//                    gamePlayData = datas[0];
+//                    indexWinerString = datas[1];
+//                    System.out.println("indexWinner:" + indexWinerString);
+////                    if(indexWinerString != "-1"){
+////                        System.err.println("indexWinerString :" + indexWinerString);
+////                    }
+//                    listCharacterObjectInfoData = datas[2];
+//                }
+//                else{
+                    gamePlayData = datas[0];
+                    listCharacterObjectInfoData = datas[1];
+               // }
+
+
                
                 RoomGame.listFriends = (List<CharacterObjInfo>) Helper.getObjectFromJsonString(ObjectType.LIST_CHARACTER_OBJECT_INFO, listCharacterObjectInfoData);
 

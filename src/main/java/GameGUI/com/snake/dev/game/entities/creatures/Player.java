@@ -14,7 +14,6 @@ import java.awt.font.TextAttribute;
 import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class Player extends Creature {
 
@@ -160,6 +159,7 @@ public class Player extends Creature {
 //        }
         if (checkIsCollisionWithItSelf()) {
             //game.getConnection().sendExitRoomByCharacterInfo(game.getRoomgameCode(), game.getIdInRoomGame());
+            game.getConnection().sendRemovedCharacter(game.getRoomgameCode(),game.getIdInRoomGame());
             game.setIsRemovedRoomgame(true);
             return;
         }

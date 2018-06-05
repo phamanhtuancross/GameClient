@@ -7,7 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,9 +18,8 @@ public class TcpConnection {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private Socket socket;
-    private Game game;
 
-    public TcpConnection(Game game, String ip, int tcpPort) {
+    public TcpConnection(String ip, int tcpPort) {
         this.SERVER_IP = ip;
         this.SERVER_PORT = tcpPort;
 
@@ -34,7 +33,6 @@ public class TcpConnection {
             e.printStackTrace();
         }
         
-        this.game = game;
     }
 
     public void sendIpIdPort(int port,String code){
@@ -192,7 +190,7 @@ public class TcpConnection {
             serverMessage.data = data;
             String jsonString = Helper.getJsonStringFromObject(serverMessage);
             dataOutputStream.writeUTF(jsonString);
-            
+
             idIndRoomGame = dataInputStream.readInt();
            
         } catch (IOException ex) {
@@ -271,5 +269,16 @@ public class TcpConnection {
         }
         
     }
-    
+
+    public void sendRemovedCharacter(String roomCode, int idInRoomGame) {
+        ServerMessage serverMessage = new ServerMessage(MessageType.SEND_REMOVED_GAME);
+        serverMessage.data = roomCode;
+        serverMessage.id = idInRoomGame;
+        String jsonString = Helper.getJsonStringFromObject(serverMessage);
+        try {
+            dataOutputStream.writeUTF(jsonString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

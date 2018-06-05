@@ -5,14 +5,14 @@
  */
 package MainGUI.com;
 
+import GameGUI.com.snake.dev.game.titlegame.CharacterObjInfo;
 import GameGUI.com.snake.dev.game.titlegame.Game;
 import GameGUI.com.snake.dev.game.titlegame.TcpConnection;
-import GameGUI.com.snake.dev.game.titlegame.CharacterObjInfo;
 import GameGUI.com.snake.dev.game.titlegame.UdpConnection;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,7 +23,7 @@ public class RoomGame extends javax.swing.JFrame {
     /**
      * Creates new form RoomGame
      */
-    private final String SERVER_IP = "localhost";
+    private String SERVER_IP = "localhost";
     private final int SERVER_PORT = 1234;
     private int UDP_PORT = 5000;
     private Game game;
@@ -34,6 +34,11 @@ public class RoomGame extends javax.swing.JFrame {
     public static String code = "";
     private String userName = "";
 
+    @Override
+    public boolean getFocusableWindowState() {
+        return super.getFocusableWindowState(); //To change body of generated methods, choose Tools | Templates.
+    }
+
     private Thread thread;
     private boolean isCoonecting = true;
     public static boolean isChangeListFriend;
@@ -42,17 +47,36 @@ public class RoomGame extends javax.swing.JFrame {
     UdpConnection udpConnection;
 
     RoomGame() {
-        initComponents();
-        isCoonecting = true;
-        playing = false;
-        init();
-    }
-
-    private void init() {
-
+        initComponents();         
         this.btnStartGame.setVisible(false);
         this.setLocationRelativeTo(null);
-        connectionServer();
+        isCoonecting = true;
+        playing = false;
+       // init();
+    }
+
+    public TcpConnection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(TcpConnection connection) {
+        this.connection = connection;
+    }
+
+    public static boolean isIsChangeListFriend() {
+        return isChangeListFriend;
+    }
+
+    public static void setIsChangeListFriend(boolean isChangeListFriend) {
+        RoomGame.isChangeListFriend = isChangeListFriend;
+    }
+
+    
+
+    public void init() {
+
+   
+        //connectionServer();
         userId = (int) connection.getIdFromServer();
         game = new Game("SNAKE");
         udpConnection = new UdpConnection(game, connection);
@@ -85,7 +109,7 @@ public class RoomGame extends javax.swing.JFrame {
                    System.out.println(".");
                     if (idInRoomGame != 0 && code != null && !"".equals(code)) {
                         boolean isRoomgameRunning = connection.checkIsRoomMasterStartGame(code);
-                        if (isRoomgameRunning == true) {
+                        if (isRoomgameRunning) {
                             game.setRoomgameCode(code);
                             game.setIdInRoomGame(idInRoomGame);
                             game.start();
@@ -134,8 +158,10 @@ public class RoomGame extends javax.swing.JFrame {
 //        }
     }
 
-    public void connectionServer() {
-        connection = new TcpConnection(game, SERVER_IP, SERVER_PORT);
+    public boolean connectionServer() {
+            connection = new TcpConnection(SERVER_IP, SERVER_PORT);
+            return true;
+
 
     }
 
@@ -210,7 +236,8 @@ public class RoomGame extends javax.swing.JFrame {
         Right.setLayout(new javax.swing.BoxLayout(Right, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setPreferredSize(new java.awt.Dimension(637, 30));
+        jPanel2.setForeground(new java.awt.Color(51, 51, 51));
+        jPanel2.setPreferredSize(new java.awt.Dimension(637, 150));
         jPanel2.setLayout(new java.awt.CardLayout());
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
@@ -309,10 +336,6 @@ public class RoomGame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnJoinGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(185, 185, 185))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -324,7 +347,7 @@ public class RoomGame extends javax.swing.JFrame {
                                             .addComponent(btnCreateRoomGame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(tfUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)))
                                     .addComponent(tfCode, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 14, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                 .addComponent(btnStartGame)
                                 .addGap(75, 75, 75)))
@@ -333,11 +356,16 @@ public class RoomGame extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                             .addComponent(tfGroupCode)
                             .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(124, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExitRoomGame, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(187, 187, 187))
+                        .addContainerGap(221, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(btnExitRoomGame, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(287, 287, 287))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(btnJoinGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(293, 293, 293))))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -353,19 +381,19 @@ public class RoomGame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExitRoomGame)
-                        .addGap(30, 30, 30)
-                        .addComponent(tfGroupCode, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnJoinGroup))
+                        .addGap(36, 36, 36)
+                        .addComponent(tfGroupCode, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(tfCode, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnCreateRoomGame)
                         .addGap(18, 18, 18)
                         .addComponent(btnStartGame)))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnJoinGroup)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         Right.add(jPanel3);
@@ -391,7 +419,7 @@ public class RoomGame extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 133, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnExit))
         );
         jPanel4Layout.setVerticalGroup(
@@ -464,7 +492,7 @@ public class RoomGame extends javax.swing.JFrame {
         this.idInRoomGame = connection.joinToGameRoomByGameRoomCode(roomCode, userName, udpPort);
 
         String message = "Join room failed";
-        if (idInRoomGame != -1) {
+        if (idInRoomGame != -1 || idInRoomGame > 3) {
             message = "join room sucessfully with id:" + idInRoomGame;
         }
         JOptionPane.showMessageDialog(null, message);
@@ -483,8 +511,8 @@ public class RoomGame extends javax.swing.JFrame {
 
         game.setRoomgameCode(code);
         game.setIdInRoomGame(idInRoomGame);
-        connection.sendStartRoomGameByRoomCode(code);
         game.start();
+        connection.sendStartRoomGameByRoomCode(code);
 
     }//GEN-LAST:event_btnStartGameActionPerformed
 
@@ -512,37 +540,37 @@ public class RoomGame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RoomGame().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(RoomGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new RoomGame().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Left;
